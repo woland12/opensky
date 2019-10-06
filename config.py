@@ -1,2 +1,0 @@
-LOGIN_OPENSKY_API = 'woland'
-PASSWORD_OPENSKY_API = 'Python12'
