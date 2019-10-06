@@ -133,6 +133,7 @@ tmp/
 local.properties
 .settings/
 .config
+config.py
 .loadpath
 
 # Eclipse Core
