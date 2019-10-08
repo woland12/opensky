@@ -3,7 +3,7 @@ from our_opensky import get_states
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    #app.config.from_pyfile('config.py')
     #db.init_app(app)
     @app.route("/")
     def index():
