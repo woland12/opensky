@@ -1,6 +1,25 @@
+import logging
+import os.path
 from opensky_api import OpenSkyApi
 import config
 
+def main():
+    list_states = get_states()
+    file_log = 'opensky.log'
+    
+    if not os.path.exists(file_log):
+        open(file_log, 'w', encoding='utf-8')
+
+    logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
+                level=logging.INFO,
+                filename=file_log
+                )
+
+    for state_vector in list_states:
+        text =f'latitude is {state_vector.latitude},longitude is {state_vector.longitude}' 
+        print(text)
+        logging.info(text)
+        
 def get_states():
 
     #Функция получает лист со словарями, в каждом словаре есть следующие атрибуты
@@ -23,11 +42,9 @@ def get_states():
     # position_source - origin of this state’s position: 0 = ADS-B, 1 = ASTERIX, 2 = MLAT, 3 = FLARM
 
     api = OpenSkyApi(config.LOGIN_OPENSKY_API,config.PASSWORD_OPENSKY_API)
-    states = api.get_states()
-    list_states = states.states
+    plane_states = api.get_states()
+    list_states = plane_states.states
     return list_states
 
 if __name__ == "__main__":
-    list_states = get_states()
-    for state_vector in list_states:
-        print(f'latitude is {state_vector.latitude},longitude is {state_vector.longitude}')
+    main()
