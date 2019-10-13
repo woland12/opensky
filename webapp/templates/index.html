@@ -16,6 +16,14 @@
         <div class="row">
             <div class="col-8">
               <h2>Список состояний страница {{number_of_page}}</h2>
+              {% if number_of_page == 1 %}
+              <a class="btn btn-primary" href="/my-route?page=2" role="button">Следующая страница</a>
+              {% elif number_of_page == len_list_of_entries %}
+              <a class="btn btn-primary" href="/my-route?page={{number_of_page-1}}" role="button">Предыдущая страница</a>
+              {% else %}
+              <a class="btn btn-primary" href="/my-route?page={{number_of_page-1}}" role="button">Предыдущая страница</a>
+              <a class="btn btn-primary" href="/my-route?page={{number_of_page+1}}" role="button">Следующая страница</a>
+              {% endif %}
               <table border="1">
               {% for num in list_of_entries %}
               <tr>
