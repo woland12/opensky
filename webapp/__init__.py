@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from get_plane_states import get_states
+from webapp.model import connect_db,Trace
    
 app = Flask(__name__)
 @app.route("/")
