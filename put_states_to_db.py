@@ -7,5 +7,4 @@ def main():
     #list_states = [{'callsign':'SD123','longitude':12.1580,'latitude':-52.3254,'on_ground':False}]
     Trace.add_to_trace(list_states)            
 
-if __name__=='__main__':
-    main()
+main()

@@ -1,22 +1,20 @@
 import config
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 
-connect_db = psycopg2.connect(dbname=config.NAME_DB, user=config.USER_DB, 
-                        password=config.PASSWORD_DB, host=config.HOSTNAME_DB)
+db = SQLAlchemy()
 
 class Trace():
-    cursor = connect_db.cursor()
-    cursor.execute('''CREATE TABLE  if not exists trace  
-            (callsign TEXT NOT NULL,
-            longitude FLOAT NOT NULL,
-            latitude FLOAT NOT NULL,
-            on_ground  BOOL NOT NULL,
-            datetime timestamp);''')
-
-    connect_db.commit()
+    callsign = db.Column(db.Text,nullable=False)
+    longitude = db.Column(db.Float,nullable=False)
+    latitude = db.Column(db.Float,unique=True,nullable=False)
+    on_ground = db.Column(db.Boolean,nullable=False)
+    datetime = db.Column(db.DateTime,nullable=True)
 
     def add_to_trace(list_states):
+        connect_db = psycopg2.connect(dbname=config.NAME_DB, user=config.USER_DB, 
+                            password=config.PASSWORD_DB, host=config.HOSTNAME_DB)
         cursor = connect_db.cursor()
         now = datetime.now()
         for state_vector in list_states:
