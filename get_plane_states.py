@@ -1,25 +1,5 @@
-import logging
-import os.path
 from opensky_api import OpenSkyApi
-import config
-
-#list_states = get_states()
-# file_log = 'opensky.log'
-
-# if not os.path.exists(file_log):
-#     open(file_log, 'w', encoding='utf-8')
-
-# logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
-#             level=logging.INFO,
-#             filename=file_log
-#             )
-
-def main():
-
-    for state_vector in list_states:
-        text =f'latitude is {state_vector.latitude},longitude is {state_vector.longitude}' 
-        print(text)
-        logging.info(text)
+from webapp import config
 
 #Функция получает лист со словарями, в каждом словаре есть следующие атрибуты
 #icao24 - ICAO24 address of the transmitter in hex string representation.
@@ -46,6 +26,3 @@ def get_states():
     plane_states = api.get_states()
     list_states = plane_states.states
     return list_states
-
-if __name__ == "__main__":
-    main()
