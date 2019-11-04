@@ -1,63 +1,54 @@
+
 from datetime import datetime
 from flask import Flask, render_template, request
+from flask_googlemaps import GoogleMaps,Map
 from get_plane_states import get_states
-from webapp.model import Trace,db
-   
+
+from sqlalchemy import create_engine
+import config
+from webapp.model import db
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    app.config['GOOGLEMAPS_KEY'] = config.GOOGLEMAPS_KEY
     db.init_app(app)
+
+    GoogleMaps(app)
+
     @app.route("/")
     def index():
-        list_states = get_states()
-        return my_render_template(list_states=list_states)
-
-    @app.route('/my-route')
-    def my_route():
-        page = request.args.get('page', default = 1, type = int)
-        list_states = get_states()
-        num_of_lines_page = 20
-        number_of_page = min(page,len(list_states)//num_of_lines_page)
-        return my_render_template(number_of_page = number_of_page,list_states=list_states)
-
-    def my_render_template(list_states,number_of_page = 1,num_of_lines_page = 20):
-        title = 'Состояния самолетов мира'
-        num_start = (number_of_page-1)*num_of_lines_page
-        num_finish = number_of_page*num_of_lines_page-1
-        list_of_entries = range(num_start,num_finish)
-        len_list_of_entries = len(list_states)//num_of_lines_page
+             
+        engine = create_engine(config.SQLALCHEMY_DATABASE_URI_LOCAL)
+        connection = engine.connect()
         
-        # Добавляем записи в базу данных
-        add_states_to_db(list_states)
+        mymap = Map(
+        identifier="view-side",
+        lat=27.4419,
+        lng=-112.1419,
+        )
 
-        return render_template('index.html',
-                                page_title = title,
-                                list_states = list_states,
-                                number_of_page = number_of_page,
-                                list_of_entries=list_of_entries,
-                                len_list_of_entries=len_list_of_entries)
-    
-    def add_states_to_db(list_states):
-        for state_vector in list_states:
-            if (state_vector.on_ground==True
-                and state_vector.callsign is not None
-                and not state_vector.callsign.strip() == ''):
-                # Здесь будем искать записи в БД по этому самолету более ранние и удалять их.
-                # Означает, что самолет на земле и в его траектории нет больше смысла
-                old_traces=Trace.query.filter_by(callsign=state_vector.callsign).filter(Trace.datetime < datetime.now()).all()
-                for old_trace in old_traces:
-                    db.session.delete(old_trace)
-            elif (state_vector.on_ground == False
-                and state_vector.callsign is not None
-                and not state_vector.callsign.strip() == ''
-                and state_vector.longitude is not None
-                and state_vector.latitude is not None):
-                new_trace = Trace(callsign=state_vector.callsign,
-                                    longitude=state_vector.longitude,
-                                    latitude=state_vector.latitude,
-                                    on_ground=state_vector.on_ground,
-                                    datetime = datetime.now()
-                                    )
-                db.session.add(new_trace)
-        db.session.commit()
+        markers =[]
+        rows = connection.execute("SELECT latitude,longitude,callsign,datetime \
+            FROM (SELECT   t.*, MAX(datetime) OVER (partition BY callsign) maxdatetime \
+            FROM PUBLIC.trace AS t) AS tt \
+            WHERE tt.datetime=tt.maxdatetime \
+            ORDER BY callsign").fetchall()
+
+        for row in rows:
+            markers.append({
+            'icon': 'http://maps.google.com/mapfiles/ms/icons/plane.png',
+            'lat': row[0],
+            'lng': row[1],
+            'infobox': f"<b>{row[2]}</b>"
+            })
+
+        
+        sndmap = Map(
+        identifier="sndmap",
+        lat=27.4419,
+        lng=-112.1419,
+        markers=markers ,
+        )
+
+        return render_template('index.html',mymap=mymap,sndmap=sndmap)
+
     return app

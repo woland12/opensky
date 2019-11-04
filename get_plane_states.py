@@ -1,5 +1,5 @@
 from opensky_api import OpenSkyApi
-from webapp import config
+import config
 
 #Функция получает лист со словарями, в каждом словаре есть следующие атрибуты
 #icao24 - ICAO24 address of the transmitter in hex string representation.

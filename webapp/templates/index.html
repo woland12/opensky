@@ -7,36 +7,16 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <title>{{page_title}}</title>
+    {{"decoupled-map"|googlemap_js(37.4419, -122.1419, markers=[(37.4419, -122.1419)])}}
+    {{mymap.js}}
+    {{sndmap.js}}
+    <title>"Text"</title>
   </head>
   <body>
     <div class="container">
-    <h1>{{page_title}}</h1>
-        <div class="row">
-            <div class="col-8">
-              <h2>Список состояний страница {{number_of_page}}</h2>
-              {% if number_of_page == 1 %}
-              <a class="btn btn-primary" href="/my-route?page=2" role="button">Следующая страница</a>
-              {% elif number_of_page == len_list_of_entries %}
-              <a class="btn btn-primary" href="/my-route?page={{number_of_page-1}}" role="button">Предыдущая страница</a>
-              {% else %}
-              <a class="btn btn-primary" href="/my-route?page={{number_of_page-1}}" role="button">Предыдущая страница</a>
-              <a class="btn btn-primary" href="/my-route?page={{number_of_page+1}}" role="button">Следующая страница</a>
-              {% endif %}
-              <table border="1">
-              {% for num in list_of_entries %}
-              <tr>
-                <td><p>{{list_states[num].callsign}}</p></td>                  
-                <td><p>{{list_states[num].origin_country}}</p></td>
-                <td><p>{{list_states[num].longitude}}</p></td>
-                <td><p>{{list_states[num].latitude}}</p></td>
-                <td><p>{{list_states[num].on_ground}}</p></td>
-              </tr>
-              {% endfor %}
-              </table>
-            </div>
-        </div>
+      <h1>Flask Google Maps Example</h1>
+      <h3> Example for different icons in multiple markers with infoboxes</h3>
+      {{sndmap.html}}
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
