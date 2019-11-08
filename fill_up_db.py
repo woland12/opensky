@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
-from get_plane_states import get_states
 from time import sleep
 from datetime import datetime,timedelta
 from webapp import config
+from get_plane_states import get_states
 
 def main():
 

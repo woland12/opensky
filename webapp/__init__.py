@@ -43,11 +43,12 @@ def create_app():
 
         
         sndmap = Map(
-        identifier="sndmap",
-        lat=27.4419,
-        lng=-112.1419,
-        markers=markers ,
-        )
+            identifier="sndmap",
+            lat=55.9000,
+            lng=37.7800,
+            markers=markers ,zoom = 3,
+            style="height:720px;width:1100px;margin:0;"
+            )
 
         return render_template('index.html',mymap=mymap,sndmap=sndmap)
 
