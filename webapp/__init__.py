@@ -7,9 +7,13 @@ from get_plane_states import get_states
 from sqlalchemy import create_engine
 import config
 from webapp.model import db
+
+
 def create_app():
     app = Flask(__name__)
     app.config['GOOGLEMAPS_KEY'] = config.GOOGLEMAPS_KEY
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     db.init_app(app)
 
     GoogleMaps(app)
@@ -51,5 +55,5 @@ def create_app():
             )
 
         return render_template('index.html',mymap=mymap,sndmap=sndmap)
-
+    
     return app

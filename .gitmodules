@@ -1,0 +1,3 @@
+[submodule "opensky"]
+	path = opensky
+	url = https://github.com/woland12/opensky

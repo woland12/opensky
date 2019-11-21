@@ -43,4 +43,4 @@ def add_states_to_db(list_states):
     trans.commit()
     connection.close()
 
-main()
+#main()
